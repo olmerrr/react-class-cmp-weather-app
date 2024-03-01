@@ -14,13 +14,7 @@ class App extends React.Component {
     displayLocation: "",
     weather: {}
   }
-
-  constructor(props) {
-    super(props);
-    this.fetchWeather = this.fetchWeather.bind(this);
-  };
-
-  // methods
+  handleLocation = (e) => this.setState({ location: e.target.value })
 
   fetchWeather = async (e) => {
     e.preventDefault();
@@ -64,11 +58,22 @@ class App extends React.Component {
     // this.setState({ location: "" });
   }
 
+  constructor(props) {
+    super(props);
+    this.fetchWeather = this.fetchWeather.bind(this);
+  };
+
+
+  // fix in feat
+  // componentDidMount() {
+  //   this.fetchWeather()
+  // }
+
   render() {
     return <>
       <h1>Classy weather</h1>
       <form onSubmit={this.fetchWeather} className="search-form">
-        <Input location={this.state.location}/>
+        <Input location={this.state.location} handleLocation={this.handleLocation}/>
         <button className="search-btn mr-2">Get weather</button>
         {this.state.isLoading && <span className="loader">Loading...</span>}
       </form>
