@@ -10,15 +10,13 @@ class App extends React.Component {
   // state
   state = {
     isLoading: false,
-    location: "lisbon",
+    location: "",
     displayLocation: "",
     weather: {}
   }
   handleLocation = (e) => this.setState({ location: e.target.value })
 
-  fetchWeather = async (e) => {
-    e.preventDefault();
-
+  fetchWeather = async () => {
     function convertToFlag(countryCode) {
       const codePoints = countryCode
         .toUpperCase()
@@ -27,7 +25,11 @@ class App extends React.Component {
       return String.fromCodePoint(...codePoints);
     }
 
-    if ( !this.state.location ) return alert("Please input location");
+    if ( !this.state.location ) {
+      alert("Please input location");
+      this.setState({ weather: {} });
+    }
+    
     try {
       // 1) Getting location (geocoding)
       this.setState({ isLoading: true })
@@ -63,18 +65,23 @@ class App extends React.Component {
     this.fetchWeather = this.fetchWeather.bind(this);
   };
 
+  componentDidMount() {
+    this.setState({ location: localStorage.getItem("location") })
+  }
 
-  // fix in feat
-  // componentDidMount() {
-  //   this.fetchWeather()
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if ( this.state.location !== prevState.location ) {
+      this.fetchWeather();
+      localStorage.setItem("location", this.state.location || "")
+    }
+  }
 
   render() {
     return <>
       <h1>Classy weather</h1>
       <form onSubmit={this.fetchWeather} className="search-form">
         <Input location={this.state.location} handleLocation={this.handleLocation}/>
-        <button className="search-btn mr-2">Get weather</button>
+        {/*<button className="search-btn mr-2">Get weather</button>*/}
         {this.state.isLoading && <span className="loader">Loading...</span>}
       </form>
 

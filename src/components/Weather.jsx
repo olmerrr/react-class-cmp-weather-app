@@ -7,6 +7,10 @@ class Weather extends React.Component {
     super(props);
   }
 
+  componentWillUnmount() {
+    console.log('Weather onMount')
+  }
+
   render() {
     const { temperature_2m_max: max, temperature_2m_min: min, time: dates, weathercode: codes } = this.props.weather;
 
